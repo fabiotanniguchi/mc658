@@ -1,0 +1,21 @@
+algorithm  : EXACT
+instance   : in/gr_berlin51_lpd
+elapsedTime: 30 s
+timeLimit  : 30 s
+optimal    : No
+sol. status: ITEM_NOT_PICKED_UP
+Solution returned has not passed in the verification.
+n          : 51
+m          : 2550
+k          : 25
+capacity   : 198.5
+depot      : 1
+lowerBound : 1
+cost       : 8043
+upperBound : 8043
+tour       : 1 22 34 35
+arc	load
+(1,22)	0
+(22,34)	2
+(34,35)	12.5
+(35,1)	10.5

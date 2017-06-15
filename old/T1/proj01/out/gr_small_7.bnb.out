@@ -1,0 +1,7 @@
+Algorithm         : BRANCH AND BOUND
+Instance          : in/gr_small_7
+ElapsedTime       : 1.6e-05s
+TimeLimit         : 30s
+Guaranteed Optimal: Yes
+BestCircuitValue  : 28.1846
+BestCircuit       : E A C D B

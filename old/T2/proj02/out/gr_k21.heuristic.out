@@ -1,0 +1,12 @@
+algorithm  : HEURISTIC
+instance   : in/gr_k21
+elapsedTime: 0 s
+timeLimit  : 30 s
+optimal    : Yes
+n          : 21
+lowerBound : 3
+upperBound : 3
+k          : 3
+nodes      : 21.19 20.0 19.0 18.0 17.0 16.0 15.0 14.0 13.0 12.0 11.0 10.0 9.0 8.0 7.0 6.0 5.0 4.0 3.0 2.0 1.0
+Solution returned by the student's algorithm has not passed in the verification.
+error      : INVALID_COLOR

@@ -1,0 +1,5 @@
+Algorithm         : BACKTRACKING
+Instance          : in/gr_small_7
+ElapsedTime       : 2.7e-05s
+TimeLimit         : 30s
+Solution returned as feasible by the student's program, but it has not passed the checking of feasibility.

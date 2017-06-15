@@ -1,0 +1,18 @@
+graph g {
+	node [
+shape = "ellipse",
+style = "bold",
+color = "black",
+fontsize = 20,
+];
+	1 [style = "bold", color="blue", pos = "0.000000,0.000000!" ];
+	2 [style = "bold", color="blue", pos = "0.000000,20.000000!" ];
+	3 [style = "bold", color="blue", pos = "26.666667,40.000000!" ];
+	4 [style = "bold", color="blue", pos = "26.666667,0.000000!" ];
+	1  -- 2 [label = "", color="blue" ];
+	2  -- 3 [label = "", color="blue" ];
+	3  -- 4 [label = "", color="blue" ];
+	4  -- 1 [label = "", color="blue" ];
+label="TSP Circuit with cost 18";
+fontsize=30;
+}

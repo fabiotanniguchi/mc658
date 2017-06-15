@@ -1,0 +1,45 @@
+algorithm  : EXACT
+instance   : in/gr_att47e_lpd
+elapsedTime: 30 s
+timeLimit  : 30 s
+optimal    : No
+sol. status: PICKUP_DELIVERY_ORDER_ERROR
+Solution returned has not passed in the verification.
+n          : 47
+m          : 2060
+k          : 23
+capacity   : 720
+depot      : 1
+lowerBound : 1
+cost       : 5858
+upperBound : 5858
+tour       : 1 40 6 17 43 30 21 22 16 8 27 37 34 41 28 7 36 12 20 2 31 38 9 15 46 33 39 32
+arc	load
+(1,40)	0
+(40,6)	-58
+(6,17)	-85
+(17,43)	-142
+(43,30)	-148
+(30,21)	-93
+(21,22)	-38
+(22,16)	-84
+(16,8)	-75
+(8,27)	-166
+(27,37)	-78
+(37,34)	-129
+(34,41)	-179
+(41,28)	-227
+(28,7)	-155
+(7,36)	-243
+(36,12)	-327
+(12,20)	-388
+(20,2)	-327
+(2,31)	-239
+(31,38)	-148
+(38,9)	-53
+(9,15)	-5
+(15,46)	-93
+(46,33)	-65
+(33,39)	6
+(39,32)	52
+(32,1)	102

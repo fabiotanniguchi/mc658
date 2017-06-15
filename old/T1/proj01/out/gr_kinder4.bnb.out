@@ -1,0 +1,7 @@
+Algorithm         : BRANCH AND BOUND
+Instance          : in/gr_kinder4
+ElapsedTime       : 1.4e-05s
+TimeLimit         : 30s
+Guaranteed Optimal: Yes
+BestCircuitValue  : 18
+BestCircuit       : 4 1 2 3

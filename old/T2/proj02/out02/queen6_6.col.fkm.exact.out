@@ -1,0 +1,12 @@
+algorithm  : EXACT
+instance   : in02/queen6_6.col.fkm
+elapsedTime: 15 s
+timeLimit  : 30 s
+optimal    : Yes
+n          : 36
+lowerBound : 7
+upperBound : 7
+k          : 7
+nodes      : 36.7 35.35 34.20 33.26 32.12 31.4 30.26 29.8 28.12 27.35 26.20 25.7 24.35 23.20 22.4 21.8 20.26 19.12 18.4 17.26 16.35 15.12 14.7 13.8 12.20 11.7 10.8 9.4 8.35 7.26 6.12 5.4 4.26 3.7 2.8 1.20
+Solution returned by the student's algorithm has not passed in the verification.
+error      : INVALID_COLORS_VS_NUMBER

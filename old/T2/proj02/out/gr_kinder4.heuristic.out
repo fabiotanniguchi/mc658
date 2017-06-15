@@ -1,0 +1,12 @@
+algorithm  : HEURISTIC
+instance   : in/gr_kinder4
+elapsedTime: 0 s
+timeLimit  : 30 s
+optimal    : Yes
+n          : 4
+lowerBound : 3
+upperBound : 3
+k          : 3
+nodes      : 4.3 3.0 2.0 1.0
+Solution returned by the student's algorithm has not passed in the verification.
+error      : INVALID_COLOR

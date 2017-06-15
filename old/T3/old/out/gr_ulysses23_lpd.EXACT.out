@@ -1,0 +1,12 @@
+algorithm  : EXACT
+instance   : in/gr_ulysses23_lpd
+elapsedTime: 0 s
+timeLimit  : 30 s
+optimal    : No
+n          : 23
+m          : 289
+k          : 11
+lowerBound : 0
+cost       : 8045
+upperBound : 1.79769e+308
+tour       : 0 9 19 20 11 15 21 14 16 17 18 1 13 7 12 22 3 8 10 2 6 5 4

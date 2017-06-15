@@ -1,0 +1,19 @@
+algorithm  : EXACT
+instance   : in/gr_d197e_lpd
+elapsedTime: 30 s
+timeLimit  : 30 s
+optimal    : No
+sol. status: PICKUP_DELIVERY_ORDER_ERROR
+Solution returned has not passed in the verification.
+n          : 197
+m          : 37914
+k          : 98
+capacity   : 1700
+depot      : 1
+lowerBound : 1
+cost       : 11320
+upperBound : 11320
+tour       : 1 2
+arc	load
+(1,2)	0
+(2,1)	-23

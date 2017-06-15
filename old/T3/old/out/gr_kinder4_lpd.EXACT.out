@@ -1,0 +1,12 @@
+algorithm  : EXACT
+instance   : in/gr_kinder4_lpd
+elapsedTime: 0 s
+timeLimit  : 30 s
+optimal    : No
+n          : 5
+m          : 20
+k          : 2
+lowerBound : 0
+cost       : 24
+upperBound : 1.79769e+308
+tour       : 1 2 3 5 4

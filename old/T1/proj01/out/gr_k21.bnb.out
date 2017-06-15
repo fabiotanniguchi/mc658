@@ -1,0 +1,7 @@
+Algorithm         : BRANCH AND BOUND
+Instance          : in/gr_k21
+ElapsedTime       : 3.1e-05s
+TimeLimit         : 30s
+Guaranteed Optimal: Yes
+BestCircuitValue  : 4376.23
+BestCircuit       : 21 6 20 19 18 4 15 12 1 7 3 9 11 16 10 8 17 13 2 5 14

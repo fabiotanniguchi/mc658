@@ -1,0 +1,7 @@
+Algorithm         : BACKTRACKING
+Instance          : in/gr_eucli_100
+ElapsedTime       : 0.00449s
+TimeLimit         : 30s
+Guaranteed Optimal: Yes
+BestCircuitValue  : 9505.11
+BestCircuit       : 100 97 41 37 48 34 84 17 53 95 7 89 31 83 52 15 98 6 79 82 94 51 30 87 57 56 64 66 86 58 32 38 10 22 2 44 16 25 61 47 80 39 92 11 91 3 26 54 78 65 20 50 70 43 45 68 4 28 69 63 81 5 49 8 62 90 67 1 13 74 27 36 96 75 23 76 40 77 9 19 24 99 33 71 73 85 18 14 72 35 46 55 93 42 88 21 12 29 59 60

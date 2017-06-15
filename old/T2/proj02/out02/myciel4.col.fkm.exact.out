@@ -1,0 +1,12 @@
+algorithm  : EXACT
+instance   : in02/myciel4.col.fkm
+elapsedTime: 6 s
+timeLimit  : 30 s
+optimal    : Yes
+n          : 23
+lowerBound : 5
+upperBound : 5
+k          : 5
+nodes      : 23.18 22.10 21.4 20.16 19.16 18.4 17.4 16.4 15.16 14.16 13.4 12.10 11.18 10.4 9.16 8.16 7.4 6.7 5.4 4.16 3.16 2.18 1.7
+Solution returned by the student's algorithm has not passed in the verification.
+error      : INVALID_COLORS_VS_NUMBER

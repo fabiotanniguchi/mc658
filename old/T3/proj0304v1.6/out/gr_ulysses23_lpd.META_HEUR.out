@@ -1,0 +1,40 @@
+algorithm  : META_HEUR
+instance   : in/gr_ulysses23_lpd
+elapsedTime: 30 s
+timeLimit  : 30 s
+optimal    : No
+sol. status: ARC_MISSING
+Solution returned has not passed in the verification.
+n          : 23
+m          : 289
+k          : 11
+capacity   : 130
+depot      : 0
+lowerBound : 2038
+cost       : 2038
+upperBound : 1.79769e+308
+tour       : 0 9 1 16 3 17 5 4 8 7 14 11 2 22 13 6 12 20 19 15 10 21 18
+arc	load
+(0,9)	0
+( ARC_MISSING )	40
+(1,16)	50
+( ARC_MISSING )	58
+(3,17)	78
+( ARC_MISSING )	70
+(5,4)	85
+(4,8)	70
+( ARC_MISSING )	50
+(7,14)	80
+( ARC_MISSING )	85
+( ARC_MISSING )	120
+(2,22)	85
+( ARC_MISSING )	55
+( ARC_MISSING )	105
+(6,12)	55
+(12,20)	45
+( ARC_MISSING )	5
+( ARC_MISSING )	25
+( ARC_MISSING )	35
+(10,21)	30
+( ARC_MISSING )	20
+(18,0)	0

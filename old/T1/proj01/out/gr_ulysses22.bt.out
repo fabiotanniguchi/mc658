@@ -1,0 +1,7 @@
+Algorithm         : BACKTRACKING
+Instance          : in/gr_ulysses22
+ElapsedTime       : 0.000148s
+TimeLimit         : 30s
+Guaranteed Optimal: Yes
+BestCircuitValue  : 10586
+BestCircuit       : 1 8 22 17 4 18 16 13 14 12 7 6 15 5 20 21 19 10 9 3 2 11
