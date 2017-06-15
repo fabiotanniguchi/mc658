@@ -6,10 +6,10 @@
 #include "prizecollectingpath.h"
 
 ///Preencher aqui para facilitar a correcao. 
-// Nome1:
-// RA1:
-// Nome2: 
-// RA2:
+// Nome1: Fabio Takahashi Tanniguchi
+// RA1: 145980
+// Nome2: -------------------------
+// RA2: ---------------------------
 
 ///
 // PLI function
@@ -20,7 +20,9 @@ int prize_collecting_st_path_pli(ListDigraph& g, ListDigraph::NodeMap<double>& p
 	GRBLinExpr expr;
 	model.set(GRB_IntAttr_ModelSense, GRB_MAXIMIZE);
 	env.set(GRB_DoubleParam_TimeLimit, tMax);
-	// and so on ...
+	
+	
+	
 	return true;
 }
 
