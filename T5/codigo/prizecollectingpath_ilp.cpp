@@ -21,9 +21,40 @@ int prize_collecting_st_path_pli(ListDigraph& g, ListDigraph::NodeMap<double>& p
 	model.set(GRB_IntAttr_ModelSense, GRB_MAXIMIZE);
 	env.set(GRB_DoubleParam_TimeLimit, tMax);
 	
+	ListDigraph::NodeMap<bool> visitedNode(g);
+	for(ListDigraph::NodeIt node(g); node != INVALID; ++node){
+		visitedNode[node] = false;
+	}
 	
+	visitedNode[s] = true;
 	
-	return true;
+	vector<ListDigraph::Node> solInicial;
+	solInicial.push_back(s);
+	
+	ListDigraph::Node atual = s;
+	
+	while(g.id(atual) != g.id(t)){
+		double custo = INFINITY;
+		ListDigraph::Arc arestaMenorCusto;
+		bool achou = false;
+		for (ListDigraph::OutArcIt aresta(g, atual); aresta != INVALID; ++aresta){
+			if(! visitedNode[g.target(aresta)]){
+				if(cost[aresta]-prize[g.target(aresta)] < custo){
+					achou = true;
+					arestaMenorCusto = aresta;
+				}
+			}
+		}
+		
+		if(!achou){
+			cout << "Não achou caminho\n";
+			return 0;
+		}
+		visitedNode[g.target(arestaMenorCusto)] = true;
+		solInicial.push_back(g.target(arestaMenorCusto));
+	}
+	
+	return 0;
 }
 
 
