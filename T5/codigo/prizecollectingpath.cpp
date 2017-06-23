@@ -54,9 +54,9 @@ int main(int argc, char* argv[]){
 	if ( !read_pcpath(input_file) ) return 1;
 
 	for ( ListDigraph::NodeIt u(g); u!=INVALID; ++u ){
-		if ( node_names[u].compare("s") )
+		if ( node_names[u].compare("s")==0 )
 			s=u;
-		if ( node_names[u].compare("t") )
+		if ( node_names[u].compare("t")==0 )
 			t=u;
 	}
 
