@@ -31,7 +31,7 @@ int prize_collecting_st_path_pli(ListDigraph& g, ListDigraph::NodeMap<double>& p
 	path.push_back(s);
 	
 	while(g.id(atual) != g.id(t)){
-		double custo = (-1) * INFINITY;
+		double premio = (-1) * INFINITY;
 		ListDigraph::Arc arestaMaiorPremio;
 		bool achou = false;
 		for (ListDigraph::OutArcIt aresta(g, atual); aresta != INVALID; ++aresta){
@@ -57,7 +57,7 @@ int prize_collecting_st_path_pli(ListDigraph& g, ListDigraph::NodeMap<double>& p
 		visitedNode[g.target(arestaMaiorPremio)] = true;
 		path.push_back(g.target(arestaMaiorPremio));
 		atual = g.target(arestaMaiorPremio);
-		premioTotal += prize[g.target(arestaMenorCusto)] - cost[arestaMenorCusto];
+		premioTotal += prize[g.target(arestaMaiorPremio)] - cost[arestaMaiorPremio];
 	}
 	
 	// desconta premio de t
