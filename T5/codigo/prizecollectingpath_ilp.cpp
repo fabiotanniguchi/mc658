@@ -38,13 +38,13 @@ int prize_collecting_st_path_pli(ListDigraph& g, ListDigraph::NodeMap<double>& p
 			if(g.id(g.target(aresta)) == g.id(t)){
 				achou = true;
 				arestaMaiorPremio = aresta;
-				custo = INFINITY;
+				premio = INFINITY;
 			}else{
 				if(! visitedNode[g.target(aresta)]){
-					if(cost[aresta]-prize[g.target(aresta)] > custo){
+					if(prize[g.target(aresta)] - cost[aresta] > premio){
 						achou = true;
 						arestaMaiorPremio = aresta;
-						custo = cost[aresta];
+						premio = prize[g.target(aresta)] - cost[aresta];
 					}
 				}
 			}
@@ -57,11 +57,11 @@ int prize_collecting_st_path_pli(ListDigraph& g, ListDigraph::NodeMap<double>& p
 		visitedNode[g.target(arestaMaiorPremio)] = true;
 		path.push_back(g.target(arestaMaiorPremio));
 		atual = g.target(arestaMaiorPremio);
-		
-		premioTotal = premioTotal - cost[arestaMaiorPremio] + prize[g.target(arestaMaiorPremio)];
+		premioTotal += prize[g.target(arestaMenorCusto)] - cost[arestaMenorCusto];
 	}
 	
-	premioTotal = premioTotal - prize[t];
+	// desconta premio de t
+	premioTotal -= prize[t];
 	
 	// FIM DA HEURISTICA GULOSA
 	
@@ -97,7 +97,9 @@ int prize_collecting_st_path_pli(ListDigraph& g, ListDigraph::NodeMap<double>& p
 		// definindo objetivo
 		GRBLinExpr exprObjetivo;
 		for(ListDigraph::ArcIt arc(g); arc != INVALID; ++arc){
-			exprObjetivo += x[g.id(arc)]*(prize[g.target(arc)] - cost[arc]);
+			exprObjetivo += x[g.id(arc)]*prize[g.target(arc)] - x[g.id(arc)]*cost[arc];
+			
+			//exprObjetivo += x[g.id(arc)]*(prize[g.target(arc)] - cost[arc]);
 		}
 		exprObjetivo = exprObjetivo - prize[t];
 		
@@ -117,7 +119,7 @@ int prize_collecting_st_path_pli(ListDigraph& g, ListDigraph::NodeMap<double>& p
 			}
 			for(ListDigraph::OutArcIt arc(g, node); arc != INVALID; ++arc){
 				ListDigraph::Arc original = arc;
-				restr1 = restr1 - x[g.id(original)];
+				restr1 -= x[g.id(original)];
 				restr3 += x[g.id(original)];
 			}
 			
