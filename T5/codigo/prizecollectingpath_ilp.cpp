@@ -28,26 +28,22 @@ int prize_collecting_st_path_pli(ListDigraph& g, ListDigraph::NodeMap<double>& p
 	double premioTotal = 0.0;
 	
 	ListDigraph::Node atual = s;
-	
-	ListDigraph::ArcMap<int> solInicial(g);
-	for(ListDigraph::ArcIt arc(g); arc != INVALID; ++arc){
-		solInicial[arc] = 0;
-	}
+	path.push_back(s);
 	
 	while(g.id(atual) != g.id(t)){
-		double custo = INFINITY;
-		ListDigraph::Arc arestaMenorCusto;
+		double custo = (-1) * INFINITY;
+		ListDigraph::Arc arestaMaiorPremio;
 		bool achou = false;
 		for (ListDigraph::OutArcIt aresta(g, atual); aresta != INVALID; ++aresta){
 			if(g.id(g.target(aresta)) == g.id(t)){
 				achou = true;
-				arestaMenorCusto = aresta;
-				custo = (-1)* INFINITY;
+				arestaMaiorPremio = aresta;
+				custo = INFINITY;
 			}else{
 				if(! visitedNode[g.target(aresta)]){
-					if(cost[aresta]-prize[g.target(aresta)] < custo){
+					if(cost[aresta]-prize[g.target(aresta)] > custo){
 						achou = true;
-						arestaMenorCusto = aresta;
+						arestaMaiorPremio = aresta;
 						custo = cost[aresta];
 					}
 				}
@@ -58,11 +54,11 @@ int prize_collecting_st_path_pli(ListDigraph& g, ListDigraph::NodeMap<double>& p
 			cout << "ERRO: Não achou caminho\n";
 			return 0;
 		}
-		visitedNode[g.target(arestaMenorCusto)] = true;
-		solInicial[arestaMenorCusto] = 1;
-		atual = g.target(arestaMenorCusto);
+		visitedNode[g.target(arestaMaiorPremio)] = true;
+		path.push_back(g.target(arestaMaiorPremio));
+		atual = g.target(arestaMaiorPremio);
 		
-		premioTotal = premioTotal - cost[arestaMenorCusto] + prize[g.target(arestaMenorCusto)];
+		premioTotal = premioTotal - cost[arestaMaiorPremio] + prize[g.target(arestaMaiorPremio)];
 	}
 	
 	premioTotal = premioTotal - prize[t];
@@ -77,6 +73,8 @@ int prize_collecting_st_path_pli(ListDigraph& g, ListDigraph::NodeMap<double>& p
 		return 2; // sol heuristica
 	}
 	
+	path.clear();
+	
 	// INICIO DO PLI
 	
 	try{
@@ -86,13 +84,12 @@ int prize_collecting_st_path_pli(ListDigraph& g, ListDigraph::NodeMap<double>& p
 		model.set(GRB_IntAttr_ModelSense, GRB_MAXIMIZE);
 		
 		// o modelo ja comeca com o valor do premio da solucao gulosa como parametro de cutoff
-		model.getEnv().set(GRB_DoubleParam_Cutoff, premioTotal - 1.0);
+		model.getEnv().set(GRB_DoubleParam_Cutoff, premioTotal);
 		
 		// criando variaveis
 		vector<GRBVar> x(countArcs(g)); // variavel que indica se a aresta eh usada
 		for(ListDigraph::ArcIt arc(g); arc != INVALID; ++arc){
-			// o x[arco] ja comeca com o valor da solucao gulosa
-			x[g.id(arc)] = model.addVar(0, 1, solInicial[arc], GRB_BINARY);
+			x[g.id(arc)] = model.addVar(0, 1, 0, GRB_BINARY);
 		}
 		
 		model.update();
