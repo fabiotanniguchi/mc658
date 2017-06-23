@@ -72,8 +72,8 @@ int prize_collecting_st_path_pli(ListDigraph& g, ListDigraph::NodeMap<double>& p
 	clock_t posGuloso = clock();
 	
 	if( (double(posGuloso - begin) / CLOCKS_PER_SEC) > tMax ){
-		UB = premioTotal;
-		LB = 0;
+		UB = INFINITY;
+		LB = premioTotal;
 		return false;
 	}
 	
