@@ -122,15 +122,27 @@ int prize_collecting_st_path_pli(ListDigraph& g, ListDigraph::NodeMap<double>& p
 			}
 			
 			if(g.id(node) != g.id(s) && g.id(node) != g.id(t)){
+				// grau de entrada deve ser igual ao grau de saida
 				model.addConstr(restr1 == 0.0);
+				
+				// grau de entrada deve ser no maximo 1
 				model.addConstr(restr2 <= 1.0);
+				
+				// grau de saida deve ser no maximo 1
 				model.addConstr(restr3 <= 1.0);
 			}else{
-				if(g.id(node) == g.id(s)){
+				if(g.id(node) == g.id(s)){ // no de partida
+					// grau de entrada deve ser zero
 					model.addConstr(restr2 == 0.0);
+					
+					// grau de saida deve ser igual a 1
 					model.addConstr(restr3 == 1.0);
-				}else{
+					
+				}else{ // no de chegada do caminho
+					// grau de entrada deve ser igual a 1
 					model.addConstr(restr2 == 1.0);
+					
+					// grau de saida deve ser zero
 					model.addConstr(restr3 == 0.0);
 				}
 			}
@@ -138,11 +150,12 @@ int prize_collecting_st_path_pli(ListDigraph& g, ListDigraph::NodeMap<double>& p
 		
 		clock_t posFormulacao = clock();
 		if( (double(posFormulacao - begin) / CLOCKS_PER_SEC) > tMax ){
-			UB = premioTotal;
-			LB = 0;
+			UB = INFINITY;
+			LB = premioTotal;
 			return false;
 		}else{
 			double tUsed = (posFormulacao - begin) / CLOCKS_PER_SEC;
+			// restrinjo o Gurobi com o tempo restante de execucao deste algoritmo
 			model.getEnv().set(GRB_DoubleParam_TimeLimit, tMax - tUsed);
 		}
 		
@@ -155,6 +168,7 @@ int prize_collecting_st_path_pli(ListDigraph& g, ListDigraph::NodeMap<double>& p
 		
 		double total = 0.0;
 		
+		// percorre de s a t passando pelos arcos escolhidos pelo solver
 		while(g.id(atual) != g.id(t)){
 			for(ListDigraph::OutArcIt arc(g, atual); arc != INVALID; ++arc){
 				ListDigraph::Arc theArc = arc;
@@ -169,13 +183,11 @@ int prize_collecting_st_path_pli(ListDigraph& g, ListDigraph::NodeMap<double>& p
 		}
 		total -= prize[t];
 		
-		cout << total << "\n";
-		
 		if (status == GRB_OPTIMAL){ // solucao otima
 			LB = total;
 			UB = total;
 			return true;
-		}else{
+		}else{ // solucao nao otima
 			LB = total;
 			UB = model.get(GRB_DoubleAttr_MaxBound);;
 			return false;
