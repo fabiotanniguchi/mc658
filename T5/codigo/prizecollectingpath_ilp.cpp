@@ -14,7 +14,7 @@
 ///
 // PLI function
 ///
-int prize_collecting_st_path_pli(ListDigraph& g, ListDigraph::NodeMap<double>& prize, ListDigraph::ArcMap<double>& cost, ListDigraph::Node s, ListDigraph::Node t, std::vector<ListDigraph::Node> &path, double &LB, double &UB, int tMax){
+int prize_collecting_st_path_pli(ListDigraph& g, ListDigraph::NodeMap<double>& prize, ListDigraph::ArcMap<double>& cost, ListDigraph::Node s, ListDigraph::Node t, std::vector<ListDigraph::Node> &path, double &UB, double &LB, int tMax){
 	
 	clock_t begin = clock();
 	
@@ -150,8 +150,35 @@ int prize_collecting_st_path_pli(ListDigraph& g, ListDigraph::NodeMap<double>& p
 		model.optimize(); // roda o solver
 		int status = model.get(GRB_IntAttr_Status);
 		
+		ListDigraph::Node atual = s;
+		path.push_back(s);
+		
+		double total = 0.0;
+		
+		while(g.id(atual) != g.id(t)){
+			for(ListDigraph::OutArcIt arc(g, atual); arc != INVALID; ++arc){
+				ListDigraph::Arc theArc = arc;
+				double originalValue = x[g.id(theArc)].get(GRB_DoubleAttr_X);
+				long value = lround(originalValue);
+				if(value == 1){
+					path.push_back(g.target(theArc));
+					atual = g.target(theArc);
+					total += prize[g.target(theArc)] - cost[theArc];
+				}
+			}
+		}
+		total -= prize[t];
+		
+		cout << total << "\n";
+		
 		if (status == GRB_OPTIMAL){ // solucao otima
+			LB = total;
+			UB = total;
 			return true;
+		}else{
+			LB = total;
+			UB = model.get(GRB_DoubleAttr_MaxBound);;
+			return false;
 		}
 		
 	}catch(GRBException e) {
@@ -168,6 +195,6 @@ int prize_collecting_st_path_pli(ListDigraph& g, ListDigraph::NodeMap<double>& p
 //
 // Heuristic function
 ///
-int prize_collecting_st_path_heuristic(ListDigraph& g, ListDigraph::NodeMap<double>& prize, ListDigraph::ArcMap<double> &cost, ListDigraph::Node s, ListDigraph::Node t, std::vector<ListDigraph::Node> &path, double &LB, double &UB, int tMax){
+int prize_collecting_st_path_heuristic(ListDigraph& g, ListDigraph::NodeMap<double>& prize, ListDigraph::ArcMap<double> &cost, ListDigraph::Node s, ListDigraph::Node t, std::vector<ListDigraph::Node> &path, double &UB, double &LB, int tMax){
 	return 0;
 }

@@ -1,0 +1,17 @@
+digraph g {
+	size = "10, 10";
+	node [style = filled, shape = "circle"];
+	v3 [color="blue", pos = "17.201760,25.194183!"];
+	v2 [color="blue", pos = "15.204596,40.000000!"];
+	v1 [color="green", pos = "18.134569,0.000000!"];
+	t [color="red", pos = "34.253510,20.086640!"];
+	s [color="red", pos = "0.000000,18.015965!"];
+	v3 -> t [label = "5.000000", color="black" ];
+	v2 -> t [label = "9.000000", color="black" ];
+	v1 -> t [label = "2.000000", color="black" ];
+	s -> v3 [label = "7.000000", color="black" ];
+	s -> v2 [label = "8.000000", color="black" ];
+	s -> v1 [label = "3.000000", color="black" ];
+label="3_2.in";
+fontsize=50;
+}
