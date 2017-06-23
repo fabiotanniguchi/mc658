@@ -45,7 +45,7 @@ int prize_collecting_st_path_pli(ListDigraph& g, ListDigraph::NodeMap<double>& p
 				custo = (-1)* INFINITY;
 			}else{
 				if(! visitedNode[g.target(aresta)]){
-					if(cost[aresta]-prize[g.target(aresta)] < custo){
+					if(prize[g.target(aresta)] - cost[aresta] < custo){
 						achou = true;
 						arestaMenorCusto = aresta;
 						custo = cost[aresta];
@@ -62,10 +62,11 @@ int prize_collecting_st_path_pli(ListDigraph& g, ListDigraph::NodeMap<double>& p
 		solInicial[arestaMenorCusto] = 1;
 		atual = g.target(arestaMenorCusto);
 		
-		premioTotal = premioTotal - cost[arestaMenorCusto] + prize[g.target(arestaMenorCusto)];
+		premioTotal += prize[g.target(arestaMenorCusto)] - cost[arestaMenorCusto];
 	}
 	
-	premioTotal = premioTotal - prize[t];
+	// desconta premio de t
+	premioTotal -= prize[t];
 	
 	// FIM DA HEURISTICA GULOSA
 	
@@ -91,8 +92,7 @@ int prize_collecting_st_path_pli(ListDigraph& g, ListDigraph::NodeMap<double>& p
 		// criando variaveis
 		vector<GRBVar> x(countArcs(g)); // variavel que indica se a aresta eh usada
 		for(ListDigraph::ArcIt arc(g); arc != INVALID; ++arc){
-			// o x[arco] ja comeca com o valor da solucao gulosa
-			x[g.id(arc)] = model.addVar(0, 1, solInicial[arc], GRB_BINARY);
+			x[g.id(arc)] = model.addVar(0, 1, 0, GRB_BINARY);
 		}
 		
 		model.update();
@@ -100,7 +100,9 @@ int prize_collecting_st_path_pli(ListDigraph& g, ListDigraph::NodeMap<double>& p
 		// definindo objetivo
 		GRBLinExpr exprObjetivo;
 		for(ListDigraph::ArcIt arc(g); arc != INVALID; ++arc){
-			exprObjetivo += x[g.id(arc)]*(prize[g.target(arc)] - cost[arc]);
+			exprObjetivo += x[g.id(arc)]*prize[g.target(arc)] - x[g.id(arc)]*cost[arc];
+			
+			//exprObjetivo += x[g.id(arc)]*(prize[g.target(arc)] - cost[arc]);
 		}
 		exprObjetivo = exprObjetivo - prize[t];
 		
@@ -120,7 +122,7 @@ int prize_collecting_st_path_pli(ListDigraph& g, ListDigraph::NodeMap<double>& p
 			}
 			for(ListDigraph::OutArcIt arc(g, node); arc != INVALID; ++arc){
 				ListDigraph::Arc original = arc;
-				restr1 = restr1 - x[g.id(original)];
+				restr1 -= x[g.id(original)];
 				restr3 += x[g.id(original)];
 			}
 			
