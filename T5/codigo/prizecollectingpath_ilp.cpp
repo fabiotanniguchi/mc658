@@ -84,7 +84,6 @@ int prize_collecting_st_path_pli(ListDigraph& g, ListDigraph::NodeMap<double>& p
 		GRBModel model = GRBModel(env);
 		GRBLinExpr expr;
 		model.set(GRB_IntAttr_ModelSense, GRB_MAXIMIZE);
-		cout << "Premio total: " << premioTotal << "\n";
 		
 		// o modelo ja comeca com o valor do premio da solucao gulosa como parametro de cutoff
 		model.getEnv().set(GRB_DoubleParam_Cutoff, premioTotal - 1.0);
