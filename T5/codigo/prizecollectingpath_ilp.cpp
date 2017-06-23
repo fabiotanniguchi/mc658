@@ -75,7 +75,7 @@ int prize_collecting_st_path_pli(ListDigraph& g, ListDigraph::NodeMap<double>& p
 	if( (double(posGuloso - begin) / CLOCKS_PER_SEC) > tMax ){
 		UB = INFINITY;
 		LB = premioTotal;
-		return false;
+		return 2; // sol heuristica
 	}
 	
 	// INICIO DO PLI
@@ -191,11 +191,11 @@ int prize_collecting_st_path_pli(ListDigraph& g, ListDigraph::NodeMap<double>& p
 		if (status == GRB_OPTIMAL){ // solucao otima
 			LB = total;
 			UB = total;
-			return true;
-		}else{ // solucao nao otima
+			return 1; // sol otima
+		}else{
 			LB = total;
 			UB = model.get(GRB_DoubleAttr_MaxBound);;
-			return false;
+			return 2; // sol heuristica
 		}
 		
 	}catch(GRBException e) {
