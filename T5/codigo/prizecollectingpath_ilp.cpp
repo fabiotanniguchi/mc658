@@ -98,8 +98,6 @@ int prize_collecting_st_path_pli(ListDigraph& g, ListDigraph::NodeMap<double>& p
 		GRBLinExpr exprObjetivo;
 		for(ListDigraph::ArcIt arc(g); arc != INVALID; ++arc){
 			exprObjetivo += x[g.id(arc)]*prize[g.target(arc)] - x[g.id(arc)]*cost[arc];
-			
-			//exprObjetivo += x[g.id(arc)]*(prize[g.target(arc)] - cost[arc]);
 		}
 		exprObjetivo = exprObjetivo - prize[t];
 		
@@ -154,7 +152,7 @@ int prize_collecting_st_path_pli(ListDigraph& g, ListDigraph::NodeMap<double>& p
 		if( (double(posFormulacao - begin) / CLOCKS_PER_SEC) > tMax ){
 			UB = INFINITY;
 			LB = premioTotal;
-			return false;
+			return 2; // sol heuristica
 		}else{
 			double tUsed = (posFormulacao - begin) / CLOCKS_PER_SEC;
 			// restrinjo o Gurobi com o tempo restante de execucao deste algoritmo
