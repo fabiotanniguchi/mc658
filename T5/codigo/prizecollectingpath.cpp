@@ -68,7 +68,7 @@ int main(int argc, char* argv[]){
 		//make_eps_graph(path, "sol");
 		//set_pdfreader("okular");
 		//set_pdfreader("open");
-		set_pdfreader("evince");
+		//set_pdfreader("xpdf");
 		show_graph_mygraphlib(input_file);
 	}
 

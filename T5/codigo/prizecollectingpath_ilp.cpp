@@ -18,58 +18,14 @@ int prize_collecting_st_path_pli(ListDigraph& g, ListDigraph::NodeMap<double>& p
 	
 	clock_t begin = clock();
 	
-	ListDigraph::NodeMap<bool> visitedNode(g);
-	for(ListDigraph::NodeIt node(g); node != INVALID; ++node){
-		visitedNode[node] = false;
-	}
-	
-	visitedNode[s] = true;
-	
-	double premioTotal = 0.0;
-	
-	ListDigraph::Node atual = s;
-	path.push_back(s);
-	
-	while(g.id(atual) != g.id(t)){
-		double premio = (-1) * INFINITY;
-		ListDigraph::Arc arestaMaiorPremio;
-		bool achou = false;
-		for (ListDigraph::OutArcIt aresta(g, atual); aresta != INVALID; ++aresta){
-			if(g.id(g.target(aresta)) == g.id(t)){
-				achou = true;
-				arestaMaiorPremio = aresta;
-				premio = INFINITY;
-			}else{
-				if(! visitedNode[g.target(aresta)]){
-					if(prize[g.target(aresta)] - cost[aresta] > premio){
-						achou = true;
-						arestaMaiorPremio = aresta;
-						premio = prize[g.target(aresta)] - cost[aresta];
-					}
-				}
-			}
-		}
-		
-		if(!achou){
-			cout << "ERRO: Não achou caminho\n";
-			return 0;
-		}
-		visitedNode[g.target(arestaMaiorPremio)] = true;
-		path.push_back(g.target(arestaMaiorPremio));
-		atual = g.target(arestaMaiorPremio);
-		premioTotal += prize[g.target(arestaMaiorPremio)] - cost[arestaMaiorPremio];
-	}
-	
-	// desconta premio de t
-	premioTotal -= prize[t];
-	
-	// FIM DA HEURISTICA GULOSA
+	// H
+	double cutoffValue = prize_collecting_st_path_heuristic(g, prize, cost, s, t, path, UB, LB, tMax);
 	
 	clock_t posGuloso = clock();
 	
 	if( (double(posGuloso - begin) / CLOCKS_PER_SEC) > tMax ){
-		UB = INFINITY;
-		LB = premioTotal;
+		UB = DBL_MAX;
+		LB = cutoffValue;
 		return 2; // sol heuristica
 	}
 	
@@ -84,7 +40,7 @@ int prize_collecting_st_path_pli(ListDigraph& g, ListDigraph::NodeMap<double>& p
 		model.set(GRB_IntAttr_ModelSense, GRB_MAXIMIZE);
 		
 		// o modelo ja comeca com o valor do premio da solucao gulosa como parametro de cutoff
-		model.getEnv().set(GRB_DoubleParam_Cutoff, premioTotal - 1.0);
+		model.getEnv().set(GRB_DoubleParam_Cutoff, cutoffValue - 1.0);
 		
 		// criando variaveis
 		vector<GRBVar> x(countArcs(g)); // variavel que indica se a aresta eh usada
@@ -150,8 +106,8 @@ int prize_collecting_st_path_pli(ListDigraph& g, ListDigraph::NodeMap<double>& p
 		
 		clock_t posFormulacao = clock();
 		if( (double(posFormulacao - begin) / CLOCKS_PER_SEC) > tMax ){
-			UB = INFINITY;
-			LB = premioTotal;
+			UB = DBL_MAX;
+			LB = cutoffValue;
 			return 2; // sol heuristica
 		}else{
 			double tUsed = (posFormulacao - begin) / CLOCKS_PER_SEC;
@@ -208,5 +164,53 @@ int prize_collecting_st_path_pli(ListDigraph& g, ListDigraph::NodeMap<double>& p
 // Heuristic function
 ///
 int prize_collecting_st_path_heuristic(ListDigraph& g, ListDigraph::NodeMap<double>& prize, ListDigraph::ArcMap<double> &cost, ListDigraph::Node s, ListDigraph::Node t, std::vector<ListDigraph::Node> &path, double &UB, double &LB, int tMax){
-	return 0;
+	
+	// HEURISTICA GULOSA
+	
+	ListDigraph::NodeMap<bool> visitedNode(g);
+	for(ListDigraph::NodeIt node(g); node != INVALID; ++node){
+		visitedNode[node] = false;
+	}
+	
+	visitedNode[s] = true;
+	
+	double premioTotal = 0.0;
+	
+	ListDigraph::Node atual = s;
+	path.push_back(s);
+	
+	while(g.id(atual) != g.id(t)){
+		double premio = DBL_MIN;
+		ListDigraph::Arc arestaMaiorPremio;
+		bool achou = false;
+		for (ListDigraph::OutArcIt aresta(g, atual); aresta != INVALID; ++aresta){
+			if(g.id(g.target(aresta)) == g.id(t)){
+				achou = true;
+				arestaMaiorPremio = aresta;
+				premio = DBL_MAX;
+			}else{
+				if(! visitedNode[g.target(aresta)]){
+					if(prize[g.target(aresta)] - cost[aresta] > premio){
+						achou = true;
+						arestaMaiorPremio = aresta;
+						premio = prize[g.target(aresta)] - cost[aresta];
+					}
+				}
+			}
+		}
+		
+		if(!achou){
+			cerr << "ERRO: Não achou caminho\n";
+			return 0;
+		}
+		visitedNode[g.target(arestaMaiorPremio)] = true;
+		path.push_back(g.target(arestaMaiorPremio));
+		atual = g.target(arestaMaiorPremio);
+		premioTotal += prize[g.target(arestaMaiorPremio)] - cost[arestaMaiorPremio];
+	}
+	
+	// desconta premio de t
+	premioTotal -= prize[t];
+	
+	return premioTotal;
 }
