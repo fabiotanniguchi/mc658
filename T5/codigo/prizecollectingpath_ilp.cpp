@@ -18,7 +18,7 @@ int prize_collecting_st_path_pli(ListDigraph& g, ListDigraph::NodeMap<double>& p
 	
 	clock_t begin = clock();
 	
-	// H
+	// pega valor de cutoff da heuristica
 	double cutoffValue = prize_collecting_st_path_heuristic(g, prize, cost, s, t, path, UB, LB, tMax);
 	
 	clock_t posGuloso = clock();
@@ -125,9 +125,11 @@ int prize_collecting_st_path_pli(ListDigraph& g, ListDigraph::NodeMap<double>& p
 		double total = 0.0;
 		
 		// percorre de s a t passando pelos arcos escolhidos pelo solver
+		// veja que isto remove os possiveis ciclos isolados gerados pelo PLI
 		while(g.id(atual) != g.id(t)){
 			for(ListDigraph::OutArcIt arc(g, atual); arc != INVALID; ++arc){
 				ListDigraph::Arc theArc = arc;
+
 				double originalValue = x[g.id(theArc)].get(GRB_DoubleAttr_X);
 				long value = lround(originalValue);
 				if(value == 1){
@@ -139,7 +141,13 @@ int prize_collecting_st_path_pli(ListDigraph& g, ListDigraph::NodeMap<double>& p
 		}
 		total -= prize[t];
 		
-		if (status == GRB_OPTIMAL){ // solucao otima
+		clock_t end = clock();
+		double tempo = (double)(end - begin) / CLOCKS_PER_SEC;
+		cout.precision(4);
+		cout << "Tempo: " << fixed << tempo << endl;
+		cout << "Premio obtido: " << fixed << total << endl;
+		
+		if (status == GRB_OPTIMAL){
 			LB = total;
 			UB = total;
 			return 1; // sol otima
@@ -200,13 +208,14 @@ int prize_collecting_st_path_heuristic(ListDigraph& g, ListDigraph::NodeMap<doub
 		}
 		
 		if(!achou){
-			cerr << "ERRO: Não achou caminho\n";
+			cerr << "Nao ha caminho\n";
 			return 0;
+		}else{
+			visitedNode[g.target(arestaMaiorPremio)] = true;
+			path.push_back(g.target(arestaMaiorPremio));
+			atual = g.target(arestaMaiorPremio);
+			premioTotal += prize[g.target(arestaMaiorPremio)] - cost[arestaMaiorPremio];
 		}
-		visitedNode[g.target(arestaMaiorPremio)] = true;
-		path.push_back(g.target(arestaMaiorPremio));
-		atual = g.target(arestaMaiorPremio);
-		premioTotal += prize[g.target(arestaMaiorPremio)] - cost[arestaMaiorPremio];
 	}
 	
 	// desconta premio de t
