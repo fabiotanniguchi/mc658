@@ -12,67 +12,54 @@
 // RA2: ---------------------------
 
 
-
-class CutToS: public GRBCallback
+class CorrectViolatedCuts: public GRBCallback
 {
     ListDigraph &g;
-    vector<GRBVar> &arcos;
+    vector<GRBVar> &x;
     ListDigraph::Node s;
     double (GRBCallback::*solution_value)(GRBVar);
     
 	public:
-		CutToS(ListDigraph &g, vector<GRBVar> &arcos, ListDigraph::Node s) :
-		g(g),arcos(arcos),s(s)
+		CorrectViolatedCuts(ListDigraph &g, vector<GRBVar> &x, ListDigraph::Node s) :
+		g(g),x(x),s(s)
 		{    }
 	protected:
 		void callback()
 		{
 			if (where==GRB_CB_MIPSOL){
-				solution_value = &CutToS::getSolution;
+				solution_value = &CorrectViolatedCuts::getSolution;
 			} else {
 				if (where==GRB_CB_MIPNODE && getIntInfo(GRB_CB_MIPNODE_STATUS)==GRB_OPTIMAL) {
-					solution_value = &CutToS::getNodeRel;
+					solution_value = &CorrectViolatedCuts::getNodeRel;
 				} else {
 					return;
 				}
 			}
 			try {
-				ArcValueMap capacity(g);
+				ArcValueMap solution(g);
 				DCutMap cut(g);
 				double vcut;
 				for (ArcIt a(g); a!=INVALID; ++a)
-					capacity[a] = (this->*solution_value)(arcos[g.id(a)]);  // or getSolution(x[a]);
+					solution[a] = (this->*solution_value)(x[g.id(a)]);
 	 
 				for (ListDigraph::NodeIt n(g); n!=INVALID; ++n) {
 					GRBLinExpr expr;
-					// find a mincut between root V[0] and other terminal
-					vcut = DiMinCut(g,capacity, s , n, cut);
-					
-					/*
-					if (lround(vcut) >= 1.0) continue;
-	 
-					// found violated cut
-					for (ArcIt a(g); a!=INVALID; ++a) {
-						if ((cut[g.source(a)]==cut[s]) && (cut[g.target(a)]!=cut[s])){
-							expr += arcos[g.id(a)];
-						}
-					}
-					addLazy(expr >= 1);
-					*/
-					
+					// find a mincut between s and other node
+					vcut = DiMinCut(g,solution, s , n, cut);
+
 					if (lround(vcut) >= 1.0)
 						continue;
 					
 					bool violated = false;
 					for (ArcIt a(g); a!=INVALID; ++a) {
-						if(lround(capacity[a]) == 1.0){
+						if(lround(solution[a]) == 1.0){
 							if( (cut[g.source(a)] != cut[s]) || (cut[g.target(a)] != cut[s]) ){
 								violated = true;
 							}
 						}
 						
 						if ((cut[g.source(a)]==cut[s]) && (cut[g.target(a)]!=cut[s])){
-							expr += arcos[g.id(a)];
+							expr += x[g.id(a)];
 						}
 					}
 					if(violated){
@@ -80,8 +67,9 @@ class CutToS: public GRBCallback
 					}
 				}
 			} catch (GRBException e) {
-				cout << "Error number: " << e.getErrorCode() << endl;
-				cout << e.getMessage() << endl;
+				cerr << "Nao foi possivel resolver o PLI. Erro na callback." << endl;
+				cerr << "Codigo de erro = " << e.getErrorCode() << endl;
+				cerr << e.getMessage();
 			} catch (...) {
 				cout << "Error during callback**" << endl;
 		}
@@ -197,18 +185,20 @@ int prize_collecting_st_path_pli(ListDigraph& g, ListDigraph::NodeMap<double>& p
 		
 		model.update();
 		
-		CutToS cb = CutToS(g, x, s);
+		CorrectViolatedCuts cb = CorrectViolatedCuts(g, x, s);
 		model.setCallback(&cb);
 		
 		model.update();
 		model.optimize(); // roda o solver
+		
+		int status = model.get(GRB_IntAttr_Status);
 		
 		ListDigraph::Node atual = s;
 		path.push_back(s);
 		
 		double total = prize[s];
 		
-		// percorre de s a t passando pelos arcos escolhidos pelo solver
+		// percorre de s a t passando pelos x escolhidos pelo solver
 		// veja que isto remove os possiveis ciclos isolados gerados pelo PLI
 		while(g.id(atual) != g.id(t)){
 			for(ListDigraph::OutArcIt arc(g, atual); arc != INVALID; ++arc){
@@ -230,9 +220,13 @@ int prize_collecting_st_path_pli(ListDigraph& g, ListDigraph::NodeMap<double>& p
 		cout << "Tempo: " << fixed << tempo << endl;
 		cout << "Premio obtido: " << fixed << total << endl;
 		
-		LB = total;
-		UB = model.get(GRB_DoubleAttr_MaxBound);
-		return 2; // sol nao garantidamente otima (explicado no relatorio)
+		if (status == GRB_OPTIMAL){ // solucao otima
+			LB = total;
+			UB = total;
+			return 1;
+		}else{
+			return 2;
+		}
 		
 	}catch(GRBException e) {
 		cerr << "Nao foi possivel resolver o PLI." << endl;
